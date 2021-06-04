@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../models_list.dart';
 import '../widget/image_picker_widget.dart';
@@ -11,14 +13,24 @@ class StatiImagePredictionView extends StatefulWidget {
 }
 
 class _StatiImagePredictionViewState extends State<StatiImagePredictionView> {
+  late File _userImageFile;
+
+  void _pickedImage(File image) {
+    _userImageFile = image;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Static Image Prediction')),
       body: Column(
         children: [
-          const Flexible(
-              flex: 7, fit: FlexFit.tight, child: ImagePickerWidget()),
+          Flexible(
+              flex: 7,
+              fit: FlexFit.tight,
+              child: ImagePickerWidget(
+                imagePickFn: _pickedImage,
+              )),
           const SizedBox(
             height: 15,
           ),
