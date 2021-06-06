@@ -1,8 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'views/realtime_detection_view.dart';
 import 'views/static_image_prediction_view.dart';
+import 'views/text_classification.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -60,6 +62,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute<StatefulWidget>(
+                          builder: (_) => const TextClassification()));
+                },
+                child: const Text(
+                  'Text Classification',
+                )),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute<StatefulWidget>(
                           builder: (_) => const StatiImagePredictionView()));
                 },
                 child: const Text(
@@ -74,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 child: const Text(
                   'Real Time Detection',
-                ))
+                )),
           ],
         ),
       ),
