@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:machinely/classifiers/object_classifier/recognition.dart';
+import 'package:machinely/classifiers/object_classifier/stats.dart';
 
 import '../models_list.dart';
 import '../widget/camera_screen_widget.dart';
@@ -11,6 +13,26 @@ class RealtimeDetectionView extends StatefulWidget {
 }
 
 class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
+  /// Results to draw bounding boxes
+  List<Recognition>? results;
+
+  /// Realtime stats
+  Stats? stats;
+
+  /// Callback to get inference results from [CameraView]
+  void resultsCallback(List<Recognition> results) {
+    setState(() {
+      this.results = results;
+    });
+  }
+
+  /// Callback to get inference stats from [CameraView]
+  void statsCallback(Stats stats) {
+    setState(() {
+      this.stats = stats;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +42,12 @@ class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Flexible(flex: 8, child: CameraScreenWidget()),
+          Flexible(
+              flex: 8,
+              child: CameraScreenWidget(
+                resultsCallback: resultsCallback,
+                statsCallback: statsCallback,
+              )),
           const SizedBox(
             height: 15,
           ),

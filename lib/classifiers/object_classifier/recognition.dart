@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:machinely/widget/camera_view_singleton.dart';
 
 /// Represents the recognition output from the model
 class Recognition {
@@ -38,7 +39,7 @@ class Recognition {
     // ratioX = screenWidth / imageInputWidth
     // ratioY = ratioX if image fits screenWidth with aspectRatio = constant
 
-    final double ratioX = CameraViewSingleton.ratio;
+    final ratioX = CameraViewSingleton.ratio!;
     final ratioY = ratioX;
 
     final transLeft = max(0.1, location.left * ratioX);
