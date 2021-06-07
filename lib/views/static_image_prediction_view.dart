@@ -1,13 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as img;
-import 'package:image_picker/image_picker.dart';
-import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
-
-import '../classifiers/image_classifier/image_classifier.dart';
-import '../classifiers/image_classifier/image_classifier_float.dart';
-import '../models_list.dart';
 import '../widget/card_view_widget.dart';
 
 class StatiImagePredictionView extends StatefulWidget {
@@ -19,117 +10,29 @@ class StatiImagePredictionView extends StatefulWidget {
 }
 
 class _StatiImagePredictionViewState extends State<StatiImagePredictionView> {
-  File? _image;
-  late ImageClassifier _classifier;
-  Category? category;
-
-  @override
-  void initState() {
-    super.initState();
-    _classifier = ImageClassifierFloat();
-  }
-
-  Future getImagefromCamera() async {
-    try {
-      final image = ImagePicker();
-      await image
-          .getImage(source: ImageSource.camera)
-          .then((value) => _image = File(value!.path));
-      setState(() {});
-    } catch (err) {
-      print('No Image Selected');
-    }
-  }
-
-  Future getImagefromGallery() async {
-    try {
-      final image = ImagePicker();
-      await image
-          .getImage(source: ImageSource.gallery)
-          .then((value) => _image = File(value!.path));
-      setState(() {});
-    } catch (err) {
-      print('No Image Selected');
-    }
-  }
-
-  void _predict() async {
-    final imageInput = img.decodeImage(_image!.readAsBytesSync())!;
-    final pred = _classifier.predict(imageInput);
-
-    setState(() {
-      category = pred;
-    });
-    print(category);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Static Image Prediction')),
       body: Column(
         children: [
-          Flexible(
-              flex: 7,
-              fit: FlexFit.tight,
-              child: Stack(
-                alignment: Alignment.topCenter,
-                children: [imagePicker(), predictionResult()],
-              )),
+          Flexible(flex: 7, fit: FlexFit.tight, child: imagePicker()),
           const SizedBox(
             height: 15,
           ),
           Flexible(
-            flex: 3,
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              alignment: WrapAlignment.center,
-              children: models
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      child: OutlinedButton(
-                          onPressed: _predict,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(models[models.indexOf(e)]),
-                          )),
-                    ),
-                  )
-                  .toList(),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget predictionResult() {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            color: Colors.white,
-            child: Text(
-              category != null ? category!.label : '',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Container(
-            color: Colors.white,
-            child: Text(
-              category != null
-                  ? 'Confidence: ${category!.score.toStringAsFixed(3)}'
-                  : '',
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  OutlinedButton(
+                      onPressed: () {},
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text('Predict'),
+                      )),
+                ],
+              ))
         ],
       ),
     );
@@ -138,23 +41,21 @@ class _StatiImagePredictionViewState extends State<StatiImagePredictionView> {
   Widget imagePicker() {
     return Column(
       children: <Widget>[
-        Expanded(
+        const Expanded(
           child: CardView(
-            child: _image != null
-                ? Image.file(_image!)
-                : const Text('No Image is picked'),
+            child: Text('No Image is picked'),
           ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             FloatingActionButton(
-              onPressed: getImagefromCamera,
+              onPressed: () {},
               heroTag: 'camera',
               child: const Icon(Icons.add_a_photo),
             ),
             FloatingActionButton(
-              onPressed: getImagefromGallery,
+              onPressed: () {},
               heroTag: 'gallery',
               child: const Icon(Icons.photo),
             )
