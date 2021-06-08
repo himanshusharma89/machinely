@@ -89,6 +89,83 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     });
   }
 
+  /// Callback to receive each frame [CameraImage] perform inference on it
+  void onLatestImageAvailable(CameraImage cameraImage) async {
+    if (classifier.interpreter != null && classifier.labels != null) {
+      // If previous inference has not completed then return
+      if (predicting) {
+        return;
+      }
+
+      if (mounted) {
+        setState(() {
+          predicting = true;
+        });
+      }
+
+      final uiThreadTimeStart = DateTime.now().millisecondsSinceEpoch;
+
+      // Data to be passed to inference isolate
+      final isolateData = IsolateData(
+          cameraImage, classifier.interpreter!.address, classifier.labels);
+
+      // We could have simply used the compute method as well however
+      // it would be as in-efficient as we need to continuously passing data
+      // to another isolate.
+
+      /// perform inference in separate isolate
+      final inferenceResults = await (inference(isolateData));
+
+      final uiThreadInferenceElapsedTime =
+          DateTime.now().millisecondsSinceEpoch - uiThreadTimeStart;
+
+      // pass results to HomeView
+      widget.resultsCallback(inferenceResults['recognitions']);
+
+      // pass stats to HomeView
+      widget.statsCallback((inferenceResults['stats'] as Stats)
+        ..totalElapsedTime = uiThreadInferenceElapsedTime);
+
+      if (mounted) {
+        // set predicting to false to allow new frames
+        setState(() {
+          predicting = false;
+        });
+      }
+    }
+  }
+
+  /// Runs inference in another isolate
+  Future<Map<String, dynamic>> inference(IsolateData isolateData) async {
+    final responsePort = ReceivePort();
+    isolateUtils.sendPort!
+        .send(isolateData..responsePort = responsePort.sendPort);
+    final results = await responsePort.first;
+    return results;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    switch (state) {
+      case AppLifecycleState.paused:
+        cameraController!.stopImageStream();
+        break;
+      case AppLifecycleState.resumed:
+        if (!cameraController!.value.isStreamingImages) {
+          await cameraController!.startImageStream(onLatestImageAvailable);
+        }
+        break;
+      default:
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    cameraController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Return empty container while the camera is not initialized
@@ -123,79 +200,5 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
         ),
       ),
     );
-  }
-
-  /// Callback to receive each frame [CameraImage] perform inference on it
-  void onLatestImageAvailable(CameraImage cameraImage) async {
-    if (classifier.interpreter != null && classifier.labels != null) {
-      // If previous inference has not completed then return
-      if (predicting) {
-        return;
-      }
-
-      setState(() {
-        predicting = true;
-      });
-
-      final uiThreadTimeStart = DateTime.now().millisecondsSinceEpoch;
-
-      // Data to be passed to inference isolate
-      final isolateData = IsolateData(
-          cameraImage, classifier.interpreter!.address, classifier.labels);
-
-      // We could have simply used the compute method as well however
-      // it would be as in-efficient as we need to continuously passing data
-      // to another isolate.
-
-      /// perform inference in separate isolate
-      final inferenceResults =
-          await (inference(isolateData));
-
-      final uiThreadInferenceElapsedTime =
-          DateTime.now().millisecondsSinceEpoch - uiThreadTimeStart;
-
-      // pass results to HomeView
-      widget.resultsCallback(inferenceResults['recognitions']);
-
-      // pass stats to HomeView
-      widget.statsCallback((inferenceResults['stats'] as Stats)
-        ..totalElapsedTime = uiThreadInferenceElapsedTime);
-
-      // set predicting to false to allow new frames
-      setState(() {
-        predicting = false;
-      });
-    }
-  }
-
-  /// Runs inference in another isolate
-  Future<Map<String, dynamic>> inference(IsolateData isolateData) async {
-    final responsePort = ReceivePort();
-    isolateUtils.sendPort!
-        .send(isolateData..responsePort = responsePort.sendPort);
-    final results = await responsePort.first;
-    return results;
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    switch (state) {
-      case AppLifecycleState.paused:
-        cameraController!.stopImageStream();
-        break;
-      case AppLifecycleState.resumed:
-        if (!cameraController!.value.isStreamingImages) {
-          await cameraController!.startImageStream(onLatestImageAvailable);
-        }
-        break;
-      default:
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    cameraController!.dispose();
-    super.dispose();
   }
 }

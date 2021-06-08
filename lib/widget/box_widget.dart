@@ -5,6 +5,7 @@ import '../classifiers/object_classifier/recognition.dart';
 class BoxWidget extends StatelessWidget {
   /// Constructor
   const BoxWidget({Key? key, this.result}) : super(key: key);
+
   /// Recognised result
   final Recognition? result;
   @override

@@ -7,6 +7,7 @@ class StatsRow extends StatelessWidget {
 
   /// Defination
   final String left;
+
   /// Output
   final String right;
 

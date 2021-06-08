@@ -35,11 +35,8 @@ class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
               children: <Widget>[
                 // Camera View
                 CameraView(resultsCallback, statsCallback),
-
                 // Bounding boxes
                 boundingBoxes(results),
-
-                // Heading
               ],
             ),
           ),
@@ -93,15 +90,19 @@ class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
 
   /// Callback to get inference results from [CameraView]
   void resultsCallback(List<Recognition> results) {
-    setState(() {
-      this.results = results;
-    });
+    if (mounted) {
+      setState(() {
+        this.results = results;
+      });
+    }
   }
 
   /// Callback to get inference stats from [CameraView]
   void statsCallback(Stats stats) {
-    setState(() {
-      this.stats = stats;
-    });
+    if (mounted) {
+      setState(() {
+        this.stats = stats;
+      });
+    }
   }
 }

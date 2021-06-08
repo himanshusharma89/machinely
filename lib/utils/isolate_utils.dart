@@ -10,14 +10,18 @@ import 'image_utils.dart';
 
 /// Manages separate Isolate instance for inference
 class IsolateUtils {
+  /// Identity of spawned isolate
   static const String debugName = 'InferenceIsolate';
 
+  /// New isolate
   Isolate? _isolate;
-  ReceivePort _receivePort = ReceivePort();
+  final ReceivePort _receivePort = ReceivePort();
   SendPort? _sendPort;
 
+  ///Send messages
   SendPort? get sendPort => _sendPort;
 
+  /// Create a isolate and receive message
   Future<void> start() async {
     _isolate = await Isolate.spawn<SendPort>(
       entryPoint,
@@ -28,17 +32,16 @@ class IsolateUtils {
     _sendPort = await (_receivePort.first);
   }
 
+  /// Send messages
   static void entryPoint(SendPort sendPort) async {
     final port = ReceivePort();
     sendPort.send(port.sendPort);
 
     await for (final IsolateData isolateData in port) {
       final classifier = ObjectClassifier(
-          interpreter:
-              Interpreter.fromAddress(isolateData.interpreterAddress),
+          interpreter: Interpreter.fromAddress(isolateData.interpreterAddress),
           labels: isolateData.labels);
-      var image =
-          ImageUtils.convertCameraImage(isolateData.cameraImage);
+      var image = ImageUtils.convertCameraImage(isolateData.cameraImage);
       if (Platform.isAndroid) {
         image = image_lib.copyRotate(image!, 90);
       }
@@ -50,9 +53,16 @@ class IsolateUtils {
 
 /// Bundles data to pass between Isolate
 class IsolateData {
+  /// Image data
   CameraImage cameraImage;
+
+  /// Address to create interpreter
   int interpreterAddress;
+
+  /// Labels data
   List<String>? labels;
+
+  /// Send respone to ReceivePort
   late SendPort responsePort;
 
   /// Constructor

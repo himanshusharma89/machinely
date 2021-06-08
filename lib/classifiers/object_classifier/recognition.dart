@@ -23,12 +23,16 @@ class Recognition {
   /// Constructor
   Recognition(this._id, this._label, this._score, [this._location]);
 
+  /// id
   int get id => _id;
 
+  /// label
   String get label => _label;
 
+  /// score
   double get score => _score;
 
+  /// location
   Rect? get location => _location;
 
   /// Returns bounding box rectangle corresponding to the
