@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// Widget showcasing Text Classification
 class TextClassification extends StatefulWidget {
+  /// Constructor
   const TextClassification({Key? key}) : super(key: key);
 
   @override

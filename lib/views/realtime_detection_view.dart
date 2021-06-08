@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../widget/camera_screen_widget.dart';
 
+/// Widget showcasing Realtie Object Detection
 class RealtimeDetectionView extends StatefulWidget {
+  /// Constructor
   const RealtimeDetectionView({Key? key}) : super(key: key);
 
   @override

@@ -9,7 +9,9 @@ void main() {
   runApp(const MyApp());
 }
 
+/// Root of the app
 class MyApp extends StatelessWidget {
+  /// Constructor
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -30,9 +32,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// MyHomePage widget consisting of Text Classification, Image Prediction 
+/// and Object Detection.
 class MyHomePage extends StatefulWidget {
+  /// Constructor
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
+  /// AppBar title
   final String title;
 
   @override
