@@ -19,21 +19,16 @@ class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Flexible(flex: 8, child: CameraScreenWidget()),
+          const Flexible(flex: 9, child: CameraScreenWidget()),
           const SizedBox(
             height: 15,
           ),
           Flexible(
-            flex: 3,
+            flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                OutlinedButton(
-                    onPressed: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text('Detect'),
-                    )),
+                
               ],
             ),
           )
