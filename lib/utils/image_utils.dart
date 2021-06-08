@@ -21,7 +21,7 @@ class ImageUtils {
   /// Converts a [CameraImage] in BGRA888 format 
   /// to [imageLib.Image] in RGB format
   static imageLib.Image convertBGRA8888ToImage(CameraImage cameraImage) {
-    final img = imageLib.Image.fromBytes(cameraImage.planes[0].width!,
+    imageLib.Image img = imageLib.Image.fromBytes(cameraImage.planes[0].width!,
         cameraImage.planes[0].height!, cameraImage.planes[0].bytes,
         format: imageLib.Format.bgra);
     return img;
@@ -30,19 +30,19 @@ class ImageUtils {
   /// Converts a [CameraImage] in YUV420 format 
   /// to [imageLib.Image] in RGB format
   static imageLib.Image convertYUV420ToImage(CameraImage cameraImage) {
-    final width = cameraImage.width;
-    final height = cameraImage.height;
+    final int width = cameraImage.width;
+    final int height = cameraImage.height;
 
-    final uvRowStride = cameraImage.planes[1].bytesPerRow;
-    final uvPixelStride = cameraImage.planes[1].bytesPerPixel;
+    final int uvRowStride = cameraImage.planes[1].bytesPerRow;
+    final int? uvPixelStride = cameraImage.planes[1].bytesPerPixel;
 
     final image = imageLib.Image(width, height);
 
-    for (var w = 0; w < width; w++) {
-      for (var h = 0; h < height; h++) {
-        final uvIndex =
+    for (int w = 0; w < width; w++) {
+      for (int h = 0; h < height; h++) {
+        final int uvIndex =
             uvPixelStride! * (w / 2).floor() + uvRowStride * (h / 2).floor();
-        final index = h * width + w;
+        final int index = h * width + w;
 
         final y = cameraImage.planes[0].bytes[index];
         final u = cameraImage.planes[1].bytes[uvIndex];
@@ -57,9 +57,9 @@ class ImageUtils {
   /// Convert a single YUV pixel to RGB
   static int yuv2rgb(int y, int u, int v) {
     // Convert yuv pixel to rgb
-    var r = (y + v * 1436 / 1024 - 179).round();
-    var g = (y - u * 46549 / 131072 + 44 - v * 93604 / 131072 + 91).round();
-    var b = (y + u * 1814 / 1024 - 227).round();
+    int r = (y + v * 1436 / 1024 - 179).round();
+    int g = (y - u * 46549 / 131072 + 44 - v * 93604 / 131072 + 91).round();
+    int b = (y + u * 1814 / 1024 - 227).round();
 
     // Clipping RGB values to be inside boundaries [ 0 , 255 ]
     r = r.clamp(0, 255);
@@ -73,7 +73,7 @@ class ImageUtils {
   }
 
   static void saveImage(imageLib.Image image, [int i = 0]) async {
-    var jpeg = imageLib.JpegEncoder().encodeImage(image);
+    List<int> jpeg = imageLib.JpegEncoder().encodeImage(image);
     final appDir = await getTemporaryDirectory();
     final appPath = appDir.path;
     final fileOnDevice = File('$appPath/out$i.jpg');

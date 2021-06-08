@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:machinely/classifiers/object_classifier/recognition.dart';
-import 'package:machinely/classifiers/object_classifier/stats.dart';
+import '../classifiers/object_classifier/recognition.dart';
+import '../classifiers/object_classifier/stats.dart';
+import '../widget/box_widget.dart';
+import '../widget/camera_view_singleton.dart';
+import '../widget/stats_row.dart';
 
-import '../models_list.dart';
 import '../widget/camera_screen_widget.dart';
 
 class RealtimeDetectionView extends StatefulWidget {
@@ -43,37 +45,51 @@ class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(
-              flex: 8,
-              child: CameraScreenWidget(
-                resultsCallback: resultsCallback,
-                statsCallback: statsCallback,
+              flex: 9,
+              child: Stack(
+                children: [
+                  CameraScreenWidget(
+                    resultsCallback: resultsCallback,
+                    statsCallback: statsCallback,
+                  ),
+                  boundingBoxes(results)
+                ],
               )),
           const SizedBox(
             height: 15,
           ),
           Flexible(
-            flex: 3,
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              alignment: WrapAlignment.center,
-              children: models
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      child: OutlinedButton(
-                          onPressed: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(models[models.indexOf(e)]),
-                          )),
-                    ),
-                  )
-                  .toList(),
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Column(
+                children: [
+                  StatsRow('Inference time:', '${stats?.inferenceTime} ms'),
+                  StatsRow('Total prediction time:',
+                      '${stats?.totalElapsedTime} ms'),
+                  StatsRow(
+                      'Pre-processing time:', '${stats?.preProcessingTime} ms'),
+                  StatsRow('Frame',
+                      '''${CameraViewSingleton.inputImageSize?.width} X ${CameraViewSingleton.inputImageSize?.height}'''),
+                ],
+              ),
             ),
           )
         ],
       ),
+    );
+  }
+
+  Widget boundingBoxes(List<Recognition>? results) {
+    if (results == null) {
+      return Container();
+    }
+    return Stack(
+      children: results
+          .map((e) => BoxWidget(
+                result: e,
+              ))
+          .toList(),
     );
   }
 }

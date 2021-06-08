@@ -7,7 +7,6 @@ import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
 import '../classifiers/image_classifier/image_classifier.dart';
 import '../classifiers/image_classifier/image_classifier_float.dart';
-import '../models_list.dart';
 import '../widget/card_view_widget.dart';
 
 class StatiImagePredictionView extends StatefulWidget {
@@ -69,36 +68,23 @@ class _StatiImagePredictionViewState extends State<StatiImagePredictionView> {
       appBar: AppBar(title: const Text('Static Image Prediction')),
       body: Column(
         children: [
-          Flexible(
-              flex: 7,
-              fit: FlexFit.tight,
-              child: Stack(
-                alignment: Alignment.topCenter,
-                children: [imagePicker(), predictionResult()],
-              )),
+          Flexible(flex: 7, fit: FlexFit.tight, child: imagePicker()),
           const SizedBox(
             height: 15,
           ),
           Flexible(
             flex: 3,
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              alignment: WrapAlignment.center,
-              children: models
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      child: OutlinedButton(
-                          onPressed: _predict,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(models[models.indexOf(e)]),
-                          )),
-                    ),
-                  )
-                  .toList(),
-            ),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  OutlinedButton(
+                      onPressed: _predict,
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text('Predict'),
+                      )),
+                  predictionResult()
+                ]),
           )
         ],
       ),
@@ -111,24 +97,18 @@ class _StatiImagePredictionViewState extends State<StatiImagePredictionView> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            color: Colors.white,
-            child: Text(
-              category != null ? category!.label : '',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
+          Text(
+            category != null ? category!.label : '',
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
           const SizedBox(
             height: 5,
           ),
-          Container(
-            color: Colors.white,
-            child: Text(
-              category != null
-                  ? 'Confidence: ${category!.score.toStringAsFixed(3)}'
-                  : '',
-              style: const TextStyle(fontSize: 16),
-            ),
+          Text(
+            category != null
+                ? 'Confidence: ${category!.score.toStringAsFixed(3)}'
+                : '',
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),

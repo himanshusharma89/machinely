@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:image/image.dart' as imageLib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
@@ -6,13 +7,13 @@ import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'recognition.dart';
 import 'stats.dart';
 
-/// Classifier
+/// ObjectClassifier
 class ObjectClassifier {
   /// Instance of Interpreter
-  late Interpreter _interpreter;
+  Interpreter? _interpreter;
 
   /// Labels file loaded as list
-  late List<String> _labels;
+  List<String>? _labels;
 
   static const String MODEL_FILE_NAME = 'detect.tflite';
   static const String LABEL_FILE_NAME = 'labelmap.txt';
@@ -24,7 +25,7 @@ class ObjectClassifier {
   static const double THRESHOLD = 0.5;
 
   /// [ImageProcessor] used to pre-process the image
-  late ImageProcessor imageProcessor;
+  ImageProcessor? imageProcessor;
 
   /// Padding the image to transform into square
   late int padSize;
@@ -51,7 +52,7 @@ class ObjectClassifier {
         options: InterpreterOptions()..threads = 4,
       );
 
-      final outputTensors = _interpreter.getOutputTensors();
+      final outputTensors = _interpreter!.getOutputTensors();
       _outputShapes = [];
       _outputTypes = [];
       outputTensors.forEach((tensor) {
@@ -81,23 +82,23 @@ class ObjectClassifier {
           .add(ResizeOp(INPUT_SIZE, INPUT_SIZE, ResizeMethod.BILINEAR))
           .build();
     }
-    inputImage = imageProcessor.process(inputImage);
+    inputImage = imageProcessor!.process(inputImage);
     return inputImage;
   }
 
   /// Runs object detection on the input image
-  Map<String, dynamic>? predict(imageLib.Image image) {
+  Map<String, dynamic>? predict(imageLib.Image? image) {
     final predictStartTime = DateTime.now().millisecondsSinceEpoch;
 
-    // if (_interpreter == null) {
-    //   print('Interpreter not initialized');
-    //   return null;
-    // }
+    if (_interpreter == null) {
+      print('Interpreter not initialized');
+      return null;
+    }
 
     final preProcessStart = DateTime.now().millisecondsSinceEpoch;
 
     // Create TensorImage from image
-    var inputImage = TensorImage.fromImage(image);
+    var inputImage = TensorImage.fromImage(image!);
 
     // Pre-process TensorImage
     inputImage = getProcessedImage(inputImage);
@@ -126,7 +127,7 @@ class ObjectClassifier {
     final inferenceTimeStart = DateTime.now().millisecondsSinceEpoch;
 
     // run inference
-    _interpreter.runForMultipleInputs(inputs, outputs);
+    _interpreter!.runForMultipleInputs(inputs, outputs);
 
     final inferenceTimeElapsed =
         DateTime.now().millisecondsSinceEpoch - inferenceTimeStart;
@@ -135,10 +136,10 @@ class ObjectClassifier {
     final resultsCount = min(NUM_RESULTS, numLocations.getIntValue(0));
 
     // Using labelOffset = 1 as ??? at index 0
-    const labelOffset = 1;
+    final labelOffset = 1;
 
-    // Using bounding box utils for easy conversion of
-    //tensorbuffer to List<Rect>
+    // Using bounding box utils for easy conversion
+    //of tensorbuffer to List<Rect>
     final locations = BoundingBoxUtils.convert(
       tensor: outputLocations,
       valueIndex: [1, 0, 3, 2],
@@ -157,14 +158,14 @@ class ObjectClassifier {
 
       // Label string
       final labelIndex = outputClasses.getIntValue(i) + labelOffset;
-      final label = _labels.elementAt(labelIndex);
+      final label = _labels!.elementAt(labelIndex);
 
       if (score > THRESHOLD) {
         // inverse of rect
         // [locations] corresponds to the image size 300 X 300
         // inverseTransformRect transforms it our [inputImage]
-        final transformedRect = imageProcessor.inverseTransformRect(
-            locations[i], image.height, image.width);
+        final transformedRect = imageProcessor!
+            .inverseTransformRect(locations[i], image.height, image.width);
 
         recognitions.add(
           Recognition(i, label, score, transformedRect),
@@ -185,8 +186,8 @@ class ObjectClassifier {
   }
 
   /// Gets the interpreter instance
-  Interpreter get interpreter => _interpreter;
+  Interpreter? get interpreter => _interpreter;
 
   /// Gets the loaded labels
-  List<String> get labels => _labels;
+  List<String>? get labels => _labels;
 }
