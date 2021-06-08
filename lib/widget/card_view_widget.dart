@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// Decorated container to display passed widget
 class CardView extends StatelessWidget {
-  const CardView({required this.child, Key? key})
-      : super(key: key);
+  /// CardView constructor to recieve the widget
+  const CardView({required this.child, Key? key}) : super(key: key);
+  /// Child Widget
   final Widget child;
   @override
   Widget build(BuildContext context) {

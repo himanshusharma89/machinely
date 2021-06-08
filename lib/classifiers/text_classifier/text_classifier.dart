@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 // Import tflite_flutter
 import 'package:tflite_flutter/tflite_flutter.dart';
 
+/// Text Classifier
 class TextClassifier {
   // name of the model file
   final _modelFile = 'text_classification.tflite';
@@ -20,6 +21,7 @@ class TextClassifier {
   // TensorFlow Lite Interpreter object
   late Interpreter _interpreter;
 
+  /// Constructor
   TextClassifier() {
     // Load model when the classifier is initialized.
     _loadModel();
@@ -32,6 +34,7 @@ class TextClassifier {
     print('Interpreter loaded successfully');
   }
 
+  /// load the pre-defined vocabulary
   void _loadDictionary() async {
     final vocab = await rootBundle.loadString('assets/$_vocabFile');
     final dict = <String, int>{};
@@ -44,6 +47,7 @@ class TextClassifier {
     print('Dictionary loaded successfully');
   }
 
+  /// Classify the text
   List<double> classify(String rawText) {
     // tokenizeInputText returns List<List<double>>
     // of shape [1, 256].
@@ -59,6 +63,7 @@ class TextClassifier {
     return [output[0][0] as double, output[0][1] as double];
   }
 
+  /// Tokenize the text to convert it into a list of word iss
   List<List<double>> tokenizeInputText(String text) {
     // Whitespace tokenization
     final toks = text.split(' ');

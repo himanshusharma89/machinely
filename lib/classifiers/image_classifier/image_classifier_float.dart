@@ -2,7 +2,9 @@ import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
 import 'image_classifier.dart';
 
+/// Classifier for floating point models
 class ImageClassifierFloat extends ImageClassifier {
+  /// Constructor
   ImageClassifierFloat({int? numThreads}) : super(numThreads: numThreads);
 
   @override

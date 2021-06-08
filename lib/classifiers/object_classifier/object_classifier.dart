@@ -1,6 +1,5 @@
 import 'dart:math';
-
-import 'package:image/image.dart' as imageLib;
+import 'package:image/image.dart' as image_lib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
@@ -15,14 +14,17 @@ class ObjectClassifier {
   /// Labels file loaded as list
   List<String>? _labels;
 
-  static const String MODEL_FILE_NAME = 'detect.tflite';
-  static const String LABEL_FILE_NAME = 'labelmap.txt';
+  /// Name of model
+  static const String modelFileName = 'detect.tflite';
+
+  /// Name of labels file associated with the model
+  static const String labelFileName = 'labelmap.txt';
 
   /// Input size of image (height = width = 300)
-  static const int INPUT_SIZE = 300;
+  static const int inputSize = 300;
 
   /// Result score threshold
-  static const double THRESHOLD = 0.5;
+  static const double threshold = 0.5;
 
   /// [ImageProcessor] used to pre-process the image
   ImageProcessor? imageProcessor;
@@ -37,20 +39,25 @@ class ObjectClassifier {
   late List<TfLiteType> _outputTypes;
 
   /// Number of results to show
-  static const int NUM_RESULTS = 10;
+  static const int numResults = 10;
 
-  ObjectClassifier() {
-    loadModel();
-    loadLabels();
+  /// Constructor
+  ObjectClassifier({
+    Interpreter? interpreter,
+    List<String>? labels,
+  }) {
+    loadModel(interpreter: interpreter);
+    loadLabels(labels: labels);
   }
 
   /// Loads interpreter from asset
-  void loadModel() async {
+  void loadModel({Interpreter? interpreter}) async {
     try {
-      _interpreter = await Interpreter.fromAsset(
-        MODEL_FILE_NAME,
-        options: InterpreterOptions()..threads = 4,
-      );
+      _interpreter = interpreter ??
+          await Interpreter.fromAsset(
+            modelFileName,
+            options: InterpreterOptions()..threads = 4,
+          );
 
       final outputTensors = _interpreter!.getOutputTensors();
       _outputShapes = [];
@@ -65,9 +72,9 @@ class ObjectClassifier {
   }
 
   /// Loads labels from assets
-  void loadLabels() async {
+  void loadLabels({List<String>? labels}) async {
     try {
-      _labels = await FileUtil.loadLabels('assets/$LABEL_FILE_NAME');
+      _labels = labels ?? await FileUtil.loadLabels('assets/$labelFileName');
     } catch (e) {
       print('Error while loading labels: $e');
     }
@@ -79,7 +86,7 @@ class ObjectClassifier {
     if (imageProcessor == null) {
       imageProcessor = ImageProcessorBuilder()
           .add(ResizeWithCropOrPadOp(padSize, padSize))
-          .add(ResizeOp(INPUT_SIZE, INPUT_SIZE, ResizeMethod.BILINEAR))
+          .add(ResizeOp(inputSize, inputSize, ResizeMethod.BILINEAR))
           .build();
     }
     inputImage = imageProcessor!.process(inputImage);
@@ -87,7 +94,7 @@ class ObjectClassifier {
   }
 
   /// Runs object detection on the input image
-  Map<String, dynamic>? predict(imageLib.Image? image) {
+  Map<String, dynamic>? predict(image_lib.Image? image) {
     final predictStartTime = DateTime.now().millisecondsSinceEpoch;
 
     if (_interpreter == null) {
@@ -133,21 +140,21 @@ class ObjectClassifier {
         DateTime.now().millisecondsSinceEpoch - inferenceTimeStart;
 
     // Maximum number of results to show
-    final resultsCount = min(NUM_RESULTS, numLocations.getIntValue(0));
+    final resultsCount = min(numResults, numLocations.getIntValue(0));
 
     // Using labelOffset = 1 as ??? at index 0
-    final labelOffset = 1;
+    const labelOffset = 1;
 
-    // Using bounding box utils for easy conversion
-    //of tensorbuffer to List<Rect>
+    // Using bounding box utils for easy
+    //conversion of tensorbuffer to List<Rect>
     final locations = BoundingBoxUtils.convert(
       tensor: outputLocations,
       valueIndex: [1, 0, 3, 2],
       boundingBoxAxis: 2,
       boundingBoxType: BoundingBoxType.BOUNDARIES,
       coordinateType: CoordinateType.RATIO,
-      height: INPUT_SIZE,
-      width: INPUT_SIZE,
+      height: inputSize,
+      width: inputSize,
     );
 
     final recognitions = <Recognition>[];
@@ -160,7 +167,7 @@ class ObjectClassifier {
       final labelIndex = outputClasses.getIntValue(i) + labelOffset;
       final label = _labels!.elementAt(labelIndex);
 
-      if (score > THRESHOLD) {
+      if (score > threshold) {
         // inverse of rect
         // [locations] corresponds to the image size 300 X 300
         // inverseTransformRect transforms it our [inputImage]
@@ -176,7 +183,7 @@ class ObjectClassifier {
     final predictElapsedTime =
         DateTime.now().millisecondsSinceEpoch - predictStartTime;
 
-    return <String, dynamic>{
+    return {
       'recognitions': recognitions,
       'stats': Stats(
           totalPredictTime: predictElapsedTime,

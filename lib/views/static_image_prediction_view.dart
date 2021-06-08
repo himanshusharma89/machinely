@@ -9,7 +9,9 @@ import '../classifiers/image_classifier/image_classifier.dart';
 import '../classifiers/image_classifier/image_classifier_float.dart';
 import '../widget/card_view_widget.dart';
 
+/// Widget showcasing Image Prediction
 class StatiImagePredictionView extends StatefulWidget {
+  /// Constructor
   const StatiImagePredictionView({Key? key}) : super(key: key);
 
   @override

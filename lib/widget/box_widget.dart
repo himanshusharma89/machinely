@@ -3,9 +3,10 @@ import '../classifiers/object_classifier/recognition.dart';
 
 /// Individual bounding box
 class BoxWidget extends StatelessWidget {
-  final Recognition? result;
-
+  /// Constructor
   const BoxWidget({Key? key, this.result}) : super(key: key);
+  /// Recognised result
+  final Recognition? result;
   @override
   Widget build(BuildContext context) {
     // Color for bounding box
@@ -23,7 +24,7 @@ class BoxWidget extends StatelessWidget {
         height: result!.renderLocation.height,
         decoration: BoxDecoration(
             border: Border.all(color: color, width: 3),
-            borderRadius: BorderRadius.all(Radius.circular(2))),
+            borderRadius: const BorderRadius.all(Radius.circular(2))),
         child: Align(
           alignment: Alignment.topLeft,
           child: FittedBox(

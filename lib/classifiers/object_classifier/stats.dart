@@ -13,6 +13,7 @@ class Stats {
   /// Time taken to pre-process the image
   int? preProcessingTime;
 
+  /// Constructor
   Stats(
       {this.totalPredictTime,
       this.totalElapsedTime,

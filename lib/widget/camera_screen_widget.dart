@@ -12,23 +12,24 @@ import '../utils/isolate_utils.dart';
 import 'camera_view_singleton.dart';
 import 'card_view_widget.dart';
 
-class CameraScreenWidget extends StatefulWidget {
-  const CameraScreenWidget(
-      {required this.resultsCallback, required this.statsCallback, Key? key})
-      : super(key: key);
-
+/// [CameraView] sends each frame for inference
+class CameraView extends StatefulWidget {
   /// Callback to pass results after inference to [HomeView]
   final Function(List<Recognition> recognitions) resultsCallback;
 
   /// Callback to inference stats to [HomeView]
   final Function(Stats stats) statsCallback;
+
+  /// Constructor
+  const CameraView(this.resultsCallback, this.statsCallback, {Key? key})
+      : super(key: key);
   @override
-  _CameraScreenWidgetState createState() => _CameraScreenWidgetState();
+  _CameraViewState createState() => _CameraViewState();
 }
 
-class _CameraScreenWidgetState extends State<CameraScreenWidget>
-    with WidgetsBindingObserver {
-  late CameraController controller;
+class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
+  /// Controller
+  CameraController? cameraController;
 
   /// true when inference is ongoing
   late bool predicting;
@@ -47,11 +48,9 @@ class _CameraScreenWidgetState extends State<CameraScreenWidget>
 
   void initStateAsync() async {
     WidgetsBinding.instance!.addObserver(this);
-
     // Spawn a new isolate
     isolateUtils = IsolateUtils();
     await isolateUtils.start();
-
     // Camera initialization
     initializeCamera();
 
@@ -62,19 +61,22 @@ class _CameraScreenWidgetState extends State<CameraScreenWidget>
     predicting = false;
   }
 
+  /// Initializes the camera by setting [cameraController]
   void initializeCamera() async {
+    // cameras = await availableCameras();
+
     // cameras[0] for rear-camera
-    controller =
+    cameraController =
         CameraController(cameras[0], ResolutionPreset.high, enableAudio: false);
 
-    controller.initialize().then((_) async {
+    cameraController!.initialize().then((_) async {
       // Stream of image passed to [onLatestImageAvailable] callback
-      await controller.startImageStream(onLatestImageAvailable);
+      await cameraController!.startImageStream(onLatestImageAvailable);
 
       /// previewSize is size of each image frame captured by controller
       ///
       /// 352x288 on iOS, 240p (320x240) on Android with ResolutionPreset.low
-      final previewSize = controller.value.previewSize;
+      final previewSize = cameraController!.value.previewSize!;
 
       /// previewSize is size of raw input image to the model
       CameraViewSingleton.inputImageSize = previewSize;
@@ -83,8 +85,44 @@ class _CameraScreenWidgetState extends State<CameraScreenWidget>
       // same as screenWidth while maintaining the aspectRatio
       final screenSize = MediaQuery.of(context).size;
       CameraViewSingleton.screenSize = screenSize;
-      CameraViewSingleton.ratio = screenSize.width / previewSize!.height;
+      CameraViewSingleton.ratio = screenSize.width / previewSize.height;
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Return empty container while the camera is not initialized
+    if (cameraController == null || !cameraController!.value.isInitialized) {
+      return const CardView(
+        child: Text('No camera to preview'),
+      );
+    }
+    var tmp = MediaQuery.of(context).size;
+    final screenH = math.max(tmp.height, tmp.width);
+    final screenW = math.min(tmp.height, tmp.width);
+    tmp = cameraController!.value.previewSize!;
+    final previewH = math.max(tmp.height, tmp.width);
+    final previewW = math.min(tmp.height, tmp.width);
+    final screenRatio = screenH / screenW;
+    final previewRatio = previewH / previewW;
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(22),
+        child: OverflowBox(
+          maxHeight: screenRatio > previewRatio
+              ? screenH
+              : screenW / previewW * previewH,
+          maxWidth: screenRatio > previewRatio
+              ? screenH / previewH * previewW
+              : screenW,
+          child: CameraPreview(
+            cameraController!,
+          ),
+        ),
+      ),
+    );
   }
 
   /// Callback to receive each frame [CameraImage] perform inference on it
@@ -110,14 +148,14 @@ class _CameraScreenWidgetState extends State<CameraScreenWidget>
       // to another isolate.
 
       /// perform inference in separate isolate
-      final inferenceResults = await inference(isolateData);
+      final inferenceResults =
+          await (inference(isolateData));
 
       final uiThreadInferenceElapsedTime =
           DateTime.now().millisecondsSinceEpoch - uiThreadTimeStart;
 
       // pass results to HomeView
-      widget.resultsCallback(
-          inferenceResults['recognitions'] as List<Recognition>);
+      widget.resultsCallback(inferenceResults['recognitions']);
 
       // pass stats to HomeView
       widget.statsCallback((inferenceResults['stats'] as Stats)
@@ -135,7 +173,7 @@ class _CameraScreenWidgetState extends State<CameraScreenWidget>
     final responsePort = ReceivePort();
     isolateUtils.sendPort!
         .send(isolateData..responsePort = responsePort.sendPort);
-    final results = await responsePort.first as Map<String, dynamic>;
+    final results = await responsePort.first;
     return results;
   }
 
@@ -143,11 +181,11 @@ class _CameraScreenWidgetState extends State<CameraScreenWidget>
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.paused:
-        controller.stopImageStream();
+        cameraController!.stopImageStream();
         break;
       case AppLifecycleState.resumed:
-        if (!controller.value.isStreamingImages) {
-          await controller.startImageStream(onLatestImageAvailable);
+        if (!cameraController!.value.isStreamingImages) {
+          await cameraController!.startImageStream(onLatestImageAvailable);
         }
         break;
       default:
@@ -157,41 +195,7 @@ class _CameraScreenWidgetState extends State<CameraScreenWidget>
   @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
-    controller.dispose();
+    cameraController!.dispose();
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (controller == null || !controller.value.isInitialized) {
-      return const CardView(child: Text('No Camera to Preview'));
-    }
-
-    var tmp = MediaQuery.of(context).size;
-    final screenH = math.max(tmp.height, tmp.width);
-    final screenW = math.min(tmp.height, tmp.width);
-    tmp = controller.value.previewSize!;
-    final previewH = math.max(tmp.height, tmp.width);
-    final previewW = math.min(tmp.height, tmp.width);
-    final screenRatio = screenH / screenW;
-    final previewRatio = previewH / previewW;
-
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(22),
-        child: OverflowBox(
-          maxHeight: screenRatio > previewRatio
-              ? screenH
-              : screenW / previewW * previewH,
-          maxWidth: screenRatio > previewRatio
-              ? screenH / previewH * previewW
-              : screenW,
-          child: CameraPreview(
-            controller,
-          ),
-        ),
-      ),
-    );
   }
 }

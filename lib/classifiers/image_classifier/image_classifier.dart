@@ -5,7 +5,9 @@ import 'package:collection/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
+/// Abstract class for both floating point and quantized models
 abstract class ImageClassifier {
+  /// Interpreter for running inference on a model
   late Interpreter interpreter;
   late InterpreterOptions _interpreterOptions;
 
@@ -23,13 +25,16 @@ abstract class ImageClassifier {
 
   late SequentialProcessor<TensorBuffer> _probabilityProcessor;
 
+  /// Labels of image classification model
   late List<String> labels;
 
+  /// Image classiication model name
   String get modelName;
 
   NormalizeOp get preProcessNormalizeOp;
   NormalizeOp get postProcessNormalizeOp;
 
+  /// Constructor
   ImageClassifier({int? numThreads}) {
     _interpreterOptions = InterpreterOptions();
 
@@ -41,6 +46,7 @@ abstract class ImageClassifier {
     loadLabels();
   }
 
+  /// Load the image classification model
   Future<void> loadModel() async {
     try {
       interpreter =
@@ -59,6 +65,7 @@ abstract class ImageClassifier {
     }
   }
 
+  /// Load labels of the image classification model
   Future<void> loadLabels() async {
     labels = await FileUtil.loadLabels(_labelsFileName);
     if (labels.length == _labelsLength) {
@@ -79,6 +86,7 @@ abstract class ImageClassifier {
         .process(_inputImage);
   }
 
+  /// Static image prediction
   Category predict(Image image) {
     // if (interpreter == null) {
     //   throw StateError('Cannot run inference, Intrepreter is null');
@@ -104,13 +112,13 @@ abstract class ImageClassifier {
     return Category(pred.key, pred.value);
   }
 
+  /// Close the interpreter
   void close() {
-    // if (interpreter != null) {
-      interpreter.close();
-    // }
+    interpreter.close();
   }
 }
 
+/// Map the top probability after prediction
 MapEntry<String, double> getTopProbability(Map<String, double> labeledProb) {
   final pq = PriorityQueue<MapEntry<String, double>>(compare);
   pq.addAll(labeledProb.entries);
@@ -118,6 +126,7 @@ MapEntry<String, double> getTopProbability(Map<String, double> labeledProb) {
   return pq.first;
 }
 
+/// Compare the predicts
 int compare(MapEntry<String, double> e1, MapEntry<String, double> e2) {
   if (e1.value > e2.value) {
     return -1;

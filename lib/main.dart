@@ -6,6 +6,7 @@ import 'views/realtime_detection_view.dart';
 import 'views/static_image_prediction_view.dart';
 import 'views/text_classification.dart';
 
+/// List of cameras
 List<CameraDescription> cameras = [];
 
 Future<void> main() async {
@@ -14,7 +15,9 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
+/// Root of the app
 class MyApp extends StatelessWidget {
+  /// Constructor
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -35,9 +38,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// MyHomePage widget consisting of buttons to navigate to
+/// Text Classification, Image Prediction and Object Detection.
 class MyHomePage extends StatefulWidget {
+  /// Constructor
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
+  /// AppBar title
   final String title;
 
   @override

@@ -1,7 +1,9 @@
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'image_classifier.dart';
 
+/// Classifier for quantized image classification models
 class ImageClassifierQuant extends ImageClassifier {
+  /// Constructor
   ImageClassifierQuant({int numThreads = 1}) : super(numThreads: numThreads);
 
   @override

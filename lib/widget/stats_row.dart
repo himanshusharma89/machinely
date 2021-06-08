@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+/// Widget to display relatime stats
 class StatsRow extends StatelessWidget {
-  final String left;
-  final String right;
+  /// Constructor
+  const StatsRow(this.left, this.right, {Key? key}) : super(key: key);
 
-  StatsRow(this.left, this.right);
+  /// Defination
+  final String left;
+  /// Output
+  final String right;
 
   @override
   Widget build(BuildContext context) {
