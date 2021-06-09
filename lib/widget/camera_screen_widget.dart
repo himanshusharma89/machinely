@@ -15,10 +15,10 @@ import 'card_view_widget.dart';
 
 /// [CameraView] sends each frame for inference
 class CameraView extends StatefulWidget {
-  /// Callback to pass results after inference to [HomeView]
+  /// Callback to pass results after inference to [RealtimeDetectionView]
   final Function(List<Recognition> recognitions) resultsCallback;
 
-  /// Callback to inference stats to [HomeView]
+  /// Callback to inference stats to [RealtimeDetectionView]
   final Function(Stats stats) statsCallback;
 
   /// Constructor
@@ -64,8 +64,6 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
   /// Initializes the camera by setting [cameraController]
   void initializeCamera() async {
-    // cameras = await availableCameras();
-
     // cameras[0] for rear-camera
     cameraController =
         CameraController(cameras[0], ResolutionPreset.high, enableAudio: false);
@@ -75,8 +73,6 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       await cameraController!.startImageStream(onLatestImageAvailable);
 
       /// previewSize is size of each image frame captured by controller
-      ///
-      /// 352x288 on iOS, 240p (320x240) on Android with ResolutionPreset.low
       final previewSize = cameraController!.value.previewSize!;
 
       /// previewSize is size of raw input image to the model
@@ -110,8 +106,8 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       final isolateData = IsolateData(
           cameraImage, classifier.interpreter!.address, classifier.labels);
 
-      // We could have simply used the compute method as well however
-      // it would be as in-efficient as we need to continuously passing data
+      // You could have simply used the compute method as well however
+      // it would be as in-efficient as you need to continuously pass data
       // to another isolate.
 
       /// perform inference in separate isolate
@@ -152,8 +148,10 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
         cameraController!.stopImageStream();
         break;
       case AppLifecycleState.resumed:
-        if (!cameraController!.value.isStreamingImages) {
-          await cameraController!.startImageStream(onLatestImageAvailable);
+        if (cameraController!.value.isInitialized) {
+          if (!cameraController!.value.isStreamingImages) {
+            await cameraController!.startImageStream(onLatestImageAvailable);
+          }
         }
         break;
       default:

@@ -91,9 +91,6 @@ abstract class ImageClassifier {
 
   /// Static image prediction
   Category predict(Image image) {
-    // if (interpreter == null) {
-    //   throw StateError('Cannot run inference, Intrepreter is null');
-    // }
     final pres = DateTime.now().millisecondsSinceEpoch;
     _inputImage = TensorImage.fromImage(image);
     _inputImage = _preProcess();

@@ -18,7 +18,7 @@ class IsolateUtils {
   final ReceivePort _receivePort = ReceivePort();
   SendPort? _sendPort;
 
-  ///Send messages
+  /// Send messages
   SendPort? get sendPort => _sendPort;
 
   /// Create a isolate and receive message

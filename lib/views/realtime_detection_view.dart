@@ -17,7 +17,7 @@ class RealtimeDetectionView extends StatefulWidget {
 }
 
 class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
-  //// Results to draw bounding boxes
+  /// Results to draw bounding boxes
   List<Recognition>? results;
 
   /// Realtime stats
@@ -43,7 +43,6 @@ class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
           const SizedBox(
             height: 15,
           ),
-          // Bottom Sheet
           Flexible(
             flex: 2,
             child: Column(
