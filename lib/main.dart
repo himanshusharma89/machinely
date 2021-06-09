@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   /// Constructor
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-  /// AppBar title
+  /// App title
   final String title;
 
   @override

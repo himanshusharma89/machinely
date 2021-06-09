@@ -25,15 +25,7 @@ class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
           const SizedBox(
             height: 15,
           ),
-          Flexible(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                
-              ],
-            ),
-          )
+          const Flexible(flex: 2, child: SizedBox())
         ],
       ),
     );
