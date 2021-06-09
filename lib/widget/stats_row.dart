@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// Widget to display relatime stats
+/// Widget to display relatime detection stats
 class StatsRow extends StatelessWidget {
   /// Constructor
   const StatsRow(this.left, this.right, {Key? key}) : super(key: key);
 
-  /// Defination
+  /// Definition
   final String left;
 
   /// Output

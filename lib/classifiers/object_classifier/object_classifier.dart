@@ -1,10 +1,11 @@
 import 'dart:math';
+
 import 'package:image/image.dart' as image_lib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
-import 'recognition.dart';
-import 'stats.dart';
+import '../../helpers/recognition.dart';
+import '../../helpers/stats.dart';
 
 /// ObjectClassifier
 class ObjectClassifier {
@@ -62,11 +63,11 @@ class ObjectClassifier {
       final outputTensors = _interpreter!.getOutputTensors();
       _outputShapes = [];
       _outputTypes = [];
-      outputTensors.forEach((tensor) {
+      for (final tensor in outputTensors) {
         _outputShapes.add(tensor.shape);
         _outputTypes.add(tensor.type);
-      });
-    } catch (e) {
+      }
+    } on Exception catch (e) {
       print('Error while creating interpreter: $e');
     }
   }
@@ -75,7 +76,7 @@ class ObjectClassifier {
   void loadLabels({List<String>? labels}) async {
     try {
       _labels = labels ?? await FileUtil.loadLabels('assets/$labelFileName');
-    } catch (e) {
+    } on Exception catch (e) {
       print('Error while loading labels: $e');
     }
   }

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
-import '../../widget/camera_view_singleton.dart';
+import 'camera_view_singleton.dart';
 
 /// Represents the recognition output from the model
 class Recognition {
@@ -61,6 +61,9 @@ class Recognition {
 
   @override
   String toString() {
-    return '''Recognition(id: $id, label: $label, score: $score, location: $location)''';
+    return 'Recognition(id: $id, '
+        'label: $label, '
+        'score: $score, '
+        'location: $location)';
   }
 }

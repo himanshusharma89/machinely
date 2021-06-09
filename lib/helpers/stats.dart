@@ -22,6 +22,8 @@ class Stats {
 
   @override
   String toString() {
-    return '''Stats{totalPredictTime: $totalPredictTime, totalElapsedTime: $totalElapsedTime, inferenceTime: $inferenceTime, preProcessingTime: $preProcessingTime}''';
+    return 'Stats{totalPredictTime: $totalPredictTime,'
+    ' totalElapsedTime: $totalElapsedTime, inferenceTime: $inferenceTime,'
+    ' preProcessingTime: $preProcessingTime}';
   }
 }

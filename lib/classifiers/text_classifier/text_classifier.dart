@@ -63,7 +63,7 @@ class TextClassifier {
     return [output[0][0] as double, output[0][1] as double];
   }
 
-  /// Tokenize the text to convert it into a list of word iss
+  /// Tokenize the text to convert it into a list of word
   List<List<double>> tokenizeInputText(String text) {
     // Whitespace tokenization
     final toks = text.split(' ');

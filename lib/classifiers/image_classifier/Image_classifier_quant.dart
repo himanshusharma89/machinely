@@ -1,4 +1,5 @@
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
+
 import 'image_classifier.dart';
 
 /// Classifier for quantized image classification models

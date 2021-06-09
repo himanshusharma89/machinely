@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:camera/camera.dart';
 import 'package:image/image.dart' as image_lib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 import '../classifiers/object_classifier/object_classifier.dart';
+import '../helpers/isolate_data.dart';
 import 'image_utils.dart';
 
 /// Manages separate Isolate instance for inference
@@ -49,26 +49,4 @@ class IsolateUtils {
       isolateData.responsePort.send(results);
     }
   }
-}
-
-/// Bundles data to pass between Isolate
-class IsolateData {
-  /// Image data
-  CameraImage cameraImage;
-
-  /// Address to create interpreter
-  int interpreterAddress;
-
-  /// Labels data
-  List<String>? labels;
-
-  /// Send respone to ReceivePort
-  late SendPort responsePort;
-
-  /// Constructor
-  IsolateData(
-    this.cameraImage,
-    this.interpreterAddress,
-    this.labels,
-  );
 }

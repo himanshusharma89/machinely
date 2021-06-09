@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../classifiers/object_classifier/recognition.dart';
-import '../classifiers/object_classifier/stats.dart';
+import '../helpers/camera_view_singleton.dart';
+import '../helpers/recognition.dart';
+import '../helpers/stats.dart';
 import '../widget/box_widget.dart';
 import '../widget/camera_screen_widget.dart';
-import '../widget/camera_view_singleton.dart';
 import '../widget/stats_row.dart';
 
 /// Widget showcasing Realtime Object Detection

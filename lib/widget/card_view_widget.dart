@@ -5,7 +5,7 @@ class CardView extends StatelessWidget {
   /// CardView constructor to recieve the widget
   const CardView({required this.child, Key? key}) : super(key: key);
 
-  /// Child Widget
+  /// Child widget
   final Widget child;
   @override
   Widget build(BuildContext context) {

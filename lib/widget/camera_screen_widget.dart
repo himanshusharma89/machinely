@@ -5,11 +5,12 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../classifiers/object_classifier/object_classifier.dart';
-import '../classifiers/object_classifier/recognition.dart';
-import '../classifiers/object_classifier/stats.dart';
+import '../helpers/camera_view_singleton.dart';
+import '../helpers/isolate_data.dart';
+import '../helpers/recognition.dart';
+import '../helpers/stats.dart';
 import '../main.dart';
 import '../utils/isolate_utils.dart';
-import 'camera_view_singleton.dart';
 import 'card_view_widget.dart';
 
 /// [CameraView] sends each frame for inference

@@ -31,7 +31,10 @@ abstract class ImageClassifier {
   /// Image classiication model name
   String get modelName;
 
+  /// TensorOperator [op]
   NormalizeOp get preProcessNormalizeOp;
+
+  /// TensorOperator [op]
   NormalizeOp get postProcessNormalizeOp;
 
   /// Constructor
@@ -60,7 +63,7 @@ abstract class ImageClassifier {
       _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
       _probabilityProcessor =
           TensorProcessorBuilder().add(postProcessNormalizeOp).build();
-    } catch (e) {
+    } on Exception catch (e) {
       print('Unable to create interpreter, Caught Exception: ${e.toString()}');
     }
   }
@@ -126,7 +129,7 @@ MapEntry<String, double> getTopProbability(Map<String, double> labeledProb) {
   return pq.first;
 }
 
-/// Compare the predicts
+/// Compare the predictions
 int compare(MapEntry<String, double> e1, MapEntry<String, double> e2) {
   if (e1.value > e2.value) {
     return -1;
