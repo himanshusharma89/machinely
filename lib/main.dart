@@ -47,12 +47,12 @@ class MyApp extends StatelessWidget {
       title: 'Machinely',
       theme: ThemeData(
           appBarTheme: AppBarTheme(
-            elevation: 0,
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            textTheme:
-                GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
-          ),
+              elevation: 0,
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              textTheme:
+                  GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
+              iconTheme: const IconThemeData(color: Colors.black)),
           textTheme:
               GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme)),
       home: const MyHomePage(title: 'Machinely'),
@@ -60,11 +60,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// MyHomePage widget consisting of Text Classification, Image Prediction 
+/// MyHomePage widget consisting of Text Classification, Image Prediction
 /// and Object Detection.
 class MyHomePage extends StatefulWidget {
   /// Constructor
   const MyHomePage({Key? key, required this.title}) : super(key: key);
+
   /// App title
   final String title;
 
