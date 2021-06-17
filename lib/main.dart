@@ -53,12 +53,12 @@ class MyApp extends StatelessWidget {
       title: 'Machinely',
       theme: ThemeData(
           appBarTheme: AppBarTheme(
-            elevation: 0,
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            textTheme:
-                GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
-          ),
+              elevation: 0,
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              textTheme:
+                  GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
+              iconTheme: const IconThemeData(color: Colors.black)),
           textTheme:
               GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme)),
       home: const MyHomePage(title: 'Machinely'),
