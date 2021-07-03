@@ -49,7 +49,7 @@ class _RealtimeDetectionViewState extends State<RealtimeDetectionView> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Flexible(flex: 9, child: CameraScreenWidget()),
+          const Flexible(flex: 9, child: CameraView()),
           const SizedBox(
             height: 15,
           ),

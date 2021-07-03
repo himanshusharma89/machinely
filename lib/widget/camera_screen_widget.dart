@@ -31,14 +31,14 @@ import 'package:flutter/material.dart';
 import 'card_view_widget.dart';
 
 /// Camera Screen
-class CameraScreenWidget extends StatefulWidget {
+class CameraView extends StatefulWidget {
   /// Constructor
-  const CameraScreenWidget({Key? key}) : super(key: key);
+  const CameraView({Key? key}) : super(key: key);
   @override
-  _CameraScreenWidgetState createState() => _CameraScreenWidgetState();
+  _CameraViewState createState() => _CameraViewState();
 }
 
-class _CameraScreenWidgetState extends State<CameraScreenWidget> {
+class _CameraViewState extends State<CameraView> {
   @override
   Widget build(BuildContext context) {
     return const CardView(child: Text('No Camera to Preview'));
