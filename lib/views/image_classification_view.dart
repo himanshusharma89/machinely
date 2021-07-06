@@ -27,61 +27,71 @@
 /// IN THE SOFTWARE.
 
 import 'package:flutter/material.dart';
+import '../widget/card_view_widget.dart';
 
-/// Widget showcasing Text Classification
-class TextClassification extends StatefulWidget {
+/// Widget showcasing Image Prediction
+class ImageClassificationView extends StatefulWidget {
   /// Constructor
-  const TextClassification({Key? key}) : super(key: key);
+  const ImageClassificationView({Key? key}) : super(key: key);
 
   @override
-  _TextClassificationState createState() => _TextClassificationState();
+  _ImageClassificationViewState createState() =>
+      _ImageClassificationViewState();
 }
 
-class _TextClassificationState extends State<TextClassification> {
-  late TextEditingController _controller;
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
+class _ImageClassificationViewState extends State<ImageClassificationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Text Classification'),
+      appBar: AppBar(title: const Text('Static Image Prediction')),
+      body: Column(
+        children: [
+          Flexible(flex: 7, fit: FlexFit.tight, child: imagePicker()),
+          const SizedBox(
+            height: 15,
+          ),
+          Flexible(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  OutlinedButton(
+                      onPressed: () {},
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text('Predict'),
+                      )),
+                ],
+              ))
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    showCursor: true,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Write some text here',
-                        hintStyle: TextStyle(fontWeight: FontWeight.normal)),
-                    controller: _controller,
-                  ),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                OutlinedButton(
-                  child: const Text('Classify'),
-                  onPressed: () {},
-                ),
-              ]),
-            ),
-            Expanded(child: ListView()),
-          ],
+    );
+  }
+
+  Widget imagePicker() {
+    return Column(
+      children: <Widget>[
+        const Expanded(
+          child: CardView(
+            child: Text('No Image is picked'),
+          ),
         ),
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            FloatingActionButton(
+              onPressed: () {},
+              heroTag: 'camera',
+              child: const Icon(Icons.add_a_photo),
+            ),
+            FloatingActionButton(
+              onPressed: () {},
+              heroTag: 'gallery',
+              child: const Icon(Icons.photo),
+            )
+          ],
+        )
+      ],
     );
   }
 }

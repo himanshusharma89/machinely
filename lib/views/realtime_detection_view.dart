@@ -28,7 +28,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../widget/camera_screen_widget.dart';
+import '../widget/camera_view_widget.dart';
 
 /// Widget showcasing Realtie Object Detection
 class RealtimeDetectionView extends StatefulWidget {

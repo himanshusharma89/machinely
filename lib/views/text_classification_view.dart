@@ -27,71 +27,61 @@
 /// IN THE SOFTWARE.
 
 import 'package:flutter/material.dart';
-import '../widget/card_view_widget.dart';
 
-/// Widget showcasing Image Prediction
-class StatiImagePredictionView extends StatefulWidget {
+/// Widget showcasing Text Classification
+class TextClassificationView extends StatefulWidget {
   /// Constructor
-  const StatiImagePredictionView({Key? key}) : super(key: key);
+  const TextClassificationView({Key? key}) : super(key: key);
 
   @override
-  _StatiImagePredictionViewState createState() =>
-      _StatiImagePredictionViewState();
+  _TextClassificationViewState createState() => _TextClassificationViewState();
 }
 
-class _StatiImagePredictionViewState extends State<StatiImagePredictionView> {
+class _TextClassificationViewState extends State<TextClassificationView> {
+  late TextEditingController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Static Image Prediction')),
-      body: Column(
-        children: [
-          Flexible(flex: 7, fit: FlexFit.tight, child: imagePicker()),
-          const SizedBox(
-            height: 15,
-          ),
-          Flexible(
-              flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  OutlinedButton(
-                      onPressed: () {},
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text('Predict'),
-                      )),
-                ],
-              ))
-        ],
+      appBar: AppBar(
+        title: const Text('Text Classification'),
       ),
-    );
-  }
-
-  Widget imagePicker() {
-    return Column(
-      children: <Widget>[
-        const Expanded(
-          child: CardView(
-            child: Text('No Image is picked'),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
           children: <Widget>[
-            FloatingActionButton(
-              onPressed: () {},
-              heroTag: 'camera',
-              child: const Icon(Icons.add_a_photo),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    showCursor: true,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Write some text here',
+                        hintStyle: TextStyle(fontWeight: FontWeight.normal)),
+                    controller: _controller,
+                  ),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                OutlinedButton(
+                  child: const Text('Classify'),
+                  onPressed: () {},
+                ),
+              ]),
             ),
-            FloatingActionButton(
-              onPressed: () {},
-              heroTag: 'gallery',
-              child: const Icon(Icons.photo),
-            )
+            Expanded(child: ListView()),
           ],
-        )
-      ],
+        ),
+      ),
     );
   }
 }

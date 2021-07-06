@@ -25,13 +25,12 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'views/image_classification_view.dart';
 import 'views/realtime_detection_view.dart';
-import 'views/static_image_prediction_view.dart';
-import 'views/text_classification.dart';
+import 'views/text_classification_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -91,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute<StatefulWidget>(
-                          builder: (_) => const TextClassification()));
+                          builder: (_) => const TextClassificationView()));
                 },
                 child: const Text(
                   'Text Classification',
@@ -101,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute<StatefulWidget>(
-                          builder: (_) => const StatiImagePredictionView()));
+                          builder: (_) => const ImageClassificationView()));
                 },
                 child: const Text(
                   'Static Image Prediction',
