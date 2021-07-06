@@ -32,8 +32,8 @@ import '../helpers/camera_view_singleton.dart';
 import '../helpers/recognition.dart';
 import '../helpers/stats.dart';
 import '../widget/box_widget.dart';
-import '../widget/camera_screen_widget.dart';
-import '../widget/stats_row.dart';
+import '../widget/camera_view_widget.dart';
+import '../widget/stats_row_widget.dart';
 
 /// Widget showcasing Realtime Object Detection
 class RealtimeDetectionView extends StatefulWidget {

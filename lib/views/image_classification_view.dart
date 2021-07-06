@@ -38,16 +38,16 @@ import '../classifiers/image_classifier/image_classifier_float.dart';
 import '../widget/card_view_widget.dart';
 
 /// Widget showcasing Image Prediction
-class StatiImagePredictionView extends StatefulWidget {
+class ImageClassificationView extends StatefulWidget {
   /// Constructor
-  const StatiImagePredictionView({Key? key}) : super(key: key);
+  const ImageClassificationView({Key? key}) : super(key: key);
 
   @override
-  _StatiImagePredictionViewState createState() =>
-      _StatiImagePredictionViewState();
+  _ImageClassificationViewState createState() =>
+      _ImageClassificationViewState();
 }
 
-class _StatiImagePredictionViewState extends State<StatiImagePredictionView> {
+class _ImageClassificationViewState extends State<ImageClassificationView> {
   File? _image;
   late ImageClassifier _classifier;
   Category? category;

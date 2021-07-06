@@ -30,15 +30,15 @@ import 'package:flutter/material.dart';
 import '../classifiers/text_classifier/text_classifier.dart';
 
 /// Widget showcasing Text Classification
-class TextClassification extends StatefulWidget {
+class TextClassificationView extends StatefulWidget {
   /// Constructor
-  const TextClassification({Key? key}) : super(key: key);
+  const TextClassificationView({Key? key}) : super(key: key);
 
   @override
-  _TextClassificationState createState() => _TextClassificationState();
+  _TextClassificationViewState createState() => _TextClassificationViewState();
 }
 
-class _TextClassificationState extends State<TextClassification> {
+class _TextClassificationViewState extends State<TextClassificationView> {
   late TextEditingController _controller;
   late TextClassifier _classifier;
   late List<Widget> _children;
