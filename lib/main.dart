@@ -25,13 +25,12 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'views/realtime_detection_view.dart';
 import 'views/image_classification_view.dart';
+import 'views/realtime_detection_view.dart';
 import 'views/text_classification_view.dart';
 
 /// List of cameras
@@ -110,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (_) => const ImageClassificationView()));
                 },
                 child: const Text(
-                  'Static Image Prediction',
+                  'Image Classification',
                 )),
             ElevatedButton(
                 onPressed: () {
