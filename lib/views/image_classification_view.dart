@@ -43,7 +43,7 @@ class _ImageClassificationViewState extends State<ImageClassificationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Static Image Prediction')),
+      appBar: AppBar(title: const Text('Image Classification')),
       body: Column(
         children: [
           Flexible(flex: 7, fit: FlexFit.tight, child: imagePicker()),

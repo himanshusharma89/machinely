@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (_) => const ImageClassificationView()));
                 },
                 child: const Text(
-                  'Static Image Prediction',
+                  'Image Classification',
                 )),
             ElevatedButton(
                 onPressed: () {
