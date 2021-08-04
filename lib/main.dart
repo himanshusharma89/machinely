@@ -28,8 +28,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'views/image_classification_view.dart';
-import 'views/realtime_detection_view.dart';
 import 'views/text_classification_view.dart';
 
 void main() {
@@ -96,22 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   'Text Classification',
                 )),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute<StatefulWidget>(
-                          builder: (_) => const ImageClassificationView()));
-                },
+                onPressed: () {},
                 child: const Text(
                   'Image Classification',
                 )),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute<StatefulWidget>(
-                          builder: (_) => const RealtimeDetectionView()));
-                },
+                onPressed: () {},
                 child: const Text(
                   'Real Time Detection',
                 )),
