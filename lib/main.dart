@@ -25,20 +25,13 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'views/image_classification_view.dart';
-import 'views/realtime_detection_view.dart';
 import 'views/text_classification_view.dart';
 
-/// List of cameras
-List<CameraDescription> cameras = [];
-
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  cameras = await availableCameras();
   runApp(const MyApp());
 }
 
@@ -102,22 +95,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   'Text Classification',
                 )),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute<StatefulWidget>(
-                          builder: (_) => const ImageClassificationView()));
-                },
+                onPressed: () {},
                 child: const Text(
                   'Image Classification',
                 )),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute<StatefulWidget>(
-                          builder: (_) => const RealtimeDetectionView()));
-                },
+                onPressed: () {},
                 child: const Text(
                   'Real Time Detection',
                 )),
