@@ -94,16 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text(
                   'Text Classification',
                 )),
-            ElevatedButton(
-                onPressed: () {},
-                child: const Text(
-                  'Image Classification',
-                )),
-            ElevatedButton(
-                onPressed: () {},
-                child: const Text(
-                  'Real Time Detection',
-                )),
           ],
         ),
       ),
