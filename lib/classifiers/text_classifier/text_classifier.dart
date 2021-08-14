@@ -86,7 +86,12 @@ class TextClassifier {
     // store the resulting values in output.
     _interpreter.run(input, output);
 
-    return [output[0][0] as double, output[0][1] as double];
+    final result = [output[0][0] as double, output[0][1] as double];
+
+    // Close the interpreter to let go of the resources.
+    _interpreter.close();
+
+    return result;
   }
 
   /// Tokenize the text to convert it into a list of word
