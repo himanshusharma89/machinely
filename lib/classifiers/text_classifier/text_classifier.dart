@@ -42,7 +42,7 @@ class TextClassifier {
   final String pad = '<PAD>';
   final String unk = '<UNKNOWN>';
 
-  late Map<String, int> _dict;
+  late Map<String, int> _dictionary;
 
   // TensorFlow Lite Interpreter object
   late Interpreter _interpreter;
@@ -69,7 +69,7 @@ class TextClassifier {
       final entry = vocabList[i].trim().split(' ');
       dict[entry[0]] = int.parse(entry[1]);
     }
-    _dict = dict;
+    _dictionary = dict;
     print('Dictionary loaded successfully');
   }
 
@@ -86,39 +86,35 @@ class TextClassifier {
     // store the resulting values in output.
     _interpreter.run(input, output);
 
-    final result = [output[0][0] as double, output[0][1] as double];
-
-    // Close the interpreter to let go of the resources.
-    _interpreter.close();
-
-    return result;
+    return [output[0][0] as double, output[0][1] as double];
   }
 
   /// Tokenize the text to convert it into a list of word
   List<List<double>> tokenizeInputText(String text) {
     // Whitespace tokenization
-    final toks = text.split(' ');
+    final tokens = text.split(' ');
 
     // Create a list of length==_sentenceLen filled with the value <pad>
-    final vec = List<double>.filled(_sentenceLen, _dict[pad]!.toDouble());
+    final vector =
+        List<double>.filled(_sentenceLen, _dictionary[pad]!.toDouble());
 
     var index = 0;
-    if (_dict.containsKey(start)) {
-      vec[index++] = _dict[start]!.toDouble();
+    if (_dictionary.containsKey(start)) {
+      vector[index++] = _dictionary[start]!.toDouble();
     }
 
     // For each word in sentence find corresponding index in dict
-    for (final tok in toks) {
+    for (final token in tokens) {
       if (index > _sentenceLen) {
         break;
       }
-      vec[index++] = _dict.containsKey(tok)
-          ? _dict[tok]!.toDouble()
-          : _dict[unk]!.toDouble();
+      vector[index++] = _dictionary.containsKey(token)
+          ? _dictionary[token]!.toDouble()
+          : _dictionary[unk]!.toDouble();
     }
 
     // returning List<List<double>>
     // as our interpreter input tensor expects the shape, [1,256]
-    return [vec];
+    return [vector];
   }
 }
