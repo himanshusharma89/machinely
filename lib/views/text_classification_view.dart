@@ -41,14 +41,14 @@ class TextClassificationView extends StatefulWidget {
 class _TextClassificationViewState extends State<TextClassificationView> {
   late TextEditingController _controller;
   late TextClassifier _classifier;
-  late List<Widget> _children;
+  late List<Widget> _list;
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
     _classifier = TextClassifier();
-    _children = [];
-    _children.add(Container());
+    _list = [];
+    _list.add(const SizedBox());
   }
 
   @override
@@ -84,31 +84,27 @@ class _TextClassificationViewState extends State<TextClassificationView> {
                     final text = _controller.text;
                     final prediction = _classifier.classify(text);
                     setState(() {
-                      _children.add(Dismissible(
-                        key: GlobalKey(),
-                        onDismissed: (direction) {},
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: prediction[1] > prediction[0]
-                                  ? Colors.lightGreen
-                                  : Colors.redAccent,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'Input: $text',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                const Text('Output:'),
-                                Text('   Positive: ${prediction[1]}'),
-                                Text('   Negative: ${prediction[0]}'),
-                              ],
-                            ),
+                      _list.add(Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: prediction[1] > prediction[0]
+                                ? Colors.lightGreen
+                                : Colors.redAccent,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Input: $text',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              const Text('Output:'),
+                              Text('   Positive: ${prediction[1]}'),
+                              Text('   Negative: ${prediction[0]}'),
+                            ],
                           ),
                         ),
                       ));
@@ -120,9 +116,9 @@ class _TextClassificationViewState extends State<TextClassificationView> {
             ),
             Expanded(
                 child: ListView.builder(
-              itemCount: _children.length,
+              itemCount: _list.length,
               itemBuilder: (_, index) {
-                return _children[index];
+                return _list[index];
               },
             )),
           ],
