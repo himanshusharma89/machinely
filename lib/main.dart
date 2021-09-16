@@ -48,7 +48,9 @@ class MyApp extends StatelessWidget {
               elevation: 0,
               centerTitle: true,
               backgroundColor: Colors.transparent,
-              titleTextStyle: GoogleFonts.nunitoSans(),
+              titleTextStyle: GoogleFonts.nunitoSans(
+                color: Colors.black
+              ),
               iconTheme: const IconThemeData(color: Colors.black)),
           textTheme:
               GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme)),
