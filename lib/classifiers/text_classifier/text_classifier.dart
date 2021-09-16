@@ -38,10 +38,13 @@ class TextClassifier {
   // Maximum length of sentence
   final int _sentenceLength = 256;
 
-  // Labels used to determine the startng, empty spaced 
-  // and unknown words in the input text
+  /// Starting Label
   final String start = '<START>';
+
+  /// Empty Space Label
   final String pad = '<PAD>';
+
+  /// Unkown Word Label
   final String unknown = '<UNKNOWN>';
 
   late Map<String, int> _dictionary;
@@ -78,7 +81,7 @@ class TextClassifier {
 
   /// Classify the text
   List<double> classify(String rawText) {
-    // Tokenize the raw textto and return List<List<double>>
+    // Tokenize the raw text and return List<List<double>>
     // of shape [1, 256].
     final input = tokenizeInputText(rawText);
 

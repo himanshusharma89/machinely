@@ -26,33 +26,48 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import 'views/home_view.dart';
+import 'text_classification_view.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+/// MyHomePage widget consisting of buttons to navigate to
+/// Text Classification, Image Prediction and Object Detection.
+class MyHomePage extends StatefulWidget {
+  /// Constructor
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  /// App title
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-/// Root of the app
-class MyApp extends StatelessWidget {
-  /// Constructor
-  const MyApp({Key? key}) : super(key: key);
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Machinely',
-      theme: ThemeData(
-          appBarTheme: AppBarTheme(
-              elevation: 0,
-              centerTitle: true,
-              backgroundColor: Colors.transparent,
-              titleTextStyle: GoogleFonts.nunitoSans(),
-              iconTheme: const IconThemeData(color: Colors.black)),
-          textTheme:
-              GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme)),
-      home: const MyHomePage(title: 'Machinely'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute<StatefulWidget>(
+                          builder: (_) => const TextClassificationView()));
+                },
+                child: const Text(
+                  'Text Classification',
+                )),
+          ],
+        ),
+      ),
     );
   }
 }
