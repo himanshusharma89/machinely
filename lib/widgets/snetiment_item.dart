@@ -25,59 +25,53 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
+
 import 'package:flutter/material.dart';
 
-/// Widget showcasing Text Classification
-class TextClassificationView extends StatefulWidget {
+/// A widget to display the prediction result
+class SentmentItem extends StatefulWidget {
+  /// Input Text
+  final String text;
+  /// Prediction
+  final List<double> prediction;
+
   /// Constructor
-  const TextClassificationView({Key? key}) : super(key: key);
+  const SentmentItem({Key? key, required this.text, required this.prediction})
+      : super(key: key);
 
   @override
-  _TextClassificationViewState createState() => _TextClassificationViewState();
+  _SentmentItemState createState() => _SentmentItemState();
 }
 
-class _TextClassificationViewState extends State<TextClassificationView> {
-  late TextEditingController _controller;
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
+class _SentmentItemState extends State<SentmentItem> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Text Classification'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: widget.prediction[1] > widget.prediction[0]
+              ? Colors.lightGreen
+              : Colors.redAccent,
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    showCursor: true,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Write some text here',
-                        hintStyle: TextStyle(fontWeight: FontWeight.normal)),
-                    controller: _controller,
-                  ),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                OutlinedButton(
-                  child: const Text('Classify'),
-                  onPressed: () {},
-                ),
-              ]),
+            Text(
+              'Input: ${widget.text}',
+              style: const TextStyle(fontSize: 16),
             ),
-            Expanded(child: ListView()),
+            const SizedBox(
+              height: 5,
+            ),
+            const Text(
+              'Output:',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text('➕ Positive: ${widget.prediction[1]}'),
+            Text('➖ Negative: ${widget.prediction[0]}'),
           ],
         ),
       ),
