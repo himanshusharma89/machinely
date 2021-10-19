@@ -25,9 +25,11 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
-
 import 'package:flutter/material.dart';
+
 import '../classifiers/text_classifier/text_classifier.dart';
+import '../models/sentiment.dart';
+import '../widgets/snetiment_item.dart';
 
 /// Widget showcasing Text Classification
 class TextClassificationView extends StatefulWidget {
@@ -41,14 +43,14 @@ class TextClassificationView extends StatefulWidget {
 class _TextClassificationViewState extends State<TextClassificationView> {
   late TextEditingController _controller;
   late TextClassifier _classifier;
-  late List<Widget> _list;
+  late List<Sentiment> _list;
+
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
     _classifier = TextClassifier();
     _list = [];
-    _list.add(const SizedBox());
   }
 
   @override
@@ -84,30 +86,7 @@ class _TextClassificationViewState extends State<TextClassificationView> {
                     final text = _controller.text;
                     final prediction = _classifier.classify(text);
                     setState(() {
-                      _list.add(Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: prediction[1] > prediction[0]
-                                ? Colors.lightGreen
-                                : Colors.redAccent,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Input: $text',
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const Text('Output:'),
-                              Text('   Positive: ${prediction[1]}'),
-                              Text('   Negative: ${prediction[0]}'),
-                            ],
-                          ),
-                        ),
-                      ));
+                      _list.add(Sentiment(text, prediction));
                       _controller.clear();
                     });
                   },
@@ -118,7 +97,9 @@ class _TextClassificationViewState extends State<TextClassificationView> {
                 child: ListView.builder(
               itemCount: _list.length,
               itemBuilder: (_, index) {
-                return _list[index];
+                return SentmentItem(
+                    prediction: _list[index].prediction,
+                    text: _list[index].text);
               },
             )),
           ],
